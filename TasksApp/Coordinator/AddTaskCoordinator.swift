@@ -23,8 +23,6 @@ class AddTaskCoordinator: Coordinator {
         addTaskViewModel.coordinatorDelegate = self
         
         presenter.present(addTaskViewController, animated: true, completion: nil)
-        
-        
     }
     
     override func finish() {
@@ -38,5 +36,4 @@ extension AddTaskCoordinator: AddTaskCoordinatorDelegate {
         // Closure to alert my coordinator parent that I am done:
         onTaskSuccessfullyAdded?()
     }
-    
 }

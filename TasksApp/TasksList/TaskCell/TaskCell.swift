@@ -33,11 +33,10 @@ class TaskCell: UITableViewCell {
     var viewModel: TaskCellViewModel? { // I can use this viewModel variable here in all places. I thought it only works inside didSet.
         didSet {
             guard let viewModel = viewModel else { return }
-            
             title.text = viewModel.task.title
-            if viewModel.task.state == 1 { // case done
+            if viewModel.task.state == 1 {   // case done
                 stateSwitch.isOn = true
-            } else { // case pending
+            } else {   // case pending
                 stateSwitch.isOn = false
             }
             settingTaskCellUI()
@@ -67,6 +66,17 @@ class TaskCell: UITableViewCell {
             stateSwitch.widthAnchor.constraint(equalToConstant: 100),
             stateSwitch.heightAnchor.constraint(equalToConstant: 30)
         ])
+        
+//        contentView.layer.cornerRadius = 4.0
+//        // Shadow
+//        contentView.layer.shadowColor = UIColor.lightGray.cgColor
+//        contentView.layer.shadowOffset = .zero
+//        contentView.layer.shadowRadius = 4.0
+//        contentView.layer.shadowOpacity = 0.2
+    }
+    
+    override func prepareForReuse() {
+        // Not necessary in this class
     }
     
     required init?(coder: NSCoder) {

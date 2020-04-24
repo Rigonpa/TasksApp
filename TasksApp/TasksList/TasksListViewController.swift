@@ -28,7 +28,6 @@ class TasksListViewController: UIViewController {
         tv.register(TaskCell.self, forCellReuseIdentifier: "CellId")
         tv.delegate = self
         tv.dataSource = self
-//        tv.allowsMultipleSelectionDuringEditing = true
         tv.tableFooterView = UIView()
         return tv
     }()
@@ -61,10 +60,13 @@ class TasksListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        
         /** viewModel.testingDatabase() // Testing data provider */
-        
         viewModel.fetchTasksFromLocalDatabase()
+        settingUIElements()
+    }
+    
+    // MARK: - Private methods
+    private func settingUIElements() {
         
         view.addSubview(segmentedControl)
         view.addSubview(tableView)
@@ -92,10 +94,7 @@ class TasksListViewController: UIViewController {
             addButton.widthAnchor.constraint(equalToConstant: 50),
             addButton.heightAnchor.constraint(equalToConstant: 50)
         ])
-        
     }
-    
-    // MARK: - Private methods
     
     fileprivate func updateUI() {
         tableView.reloadData()
@@ -109,7 +108,7 @@ class TasksListViewController: UIViewController {
         let animationView = AnimationView(name: "LoadingLottie")
         view.addSubview(animationView)
         animationView.translatesAutoresizingMaskIntoConstraints = false
-        animationView.loopMode = .repeat(1.0)
+        animationView.loopMode = .repeat(2.0)
         animationView.frame = CGRect(x: 0, y: 0, width: 400, height: 400)
         animationView.play {[weak self] (isFinished) in
             guard let self = self else { return }
@@ -140,12 +139,12 @@ extension TasksListViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.numberOfRows(segmentedControlPosition: segmentedControl.selectedSegmentIndex)
+        return viewModel.numberOfRows(section: segmentedControl.selectedSegmentIndex)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "CellId", for: indexPath) as? TaskCell,
-            let cellViewModel = viewModel.selectOneOfTheTaskViewModelsArray(indexPath: indexPath, segmentedControlPosition: segmentedControl.selectedSegmentIndex) else { fatalError() }
+            let cellViewModel = viewModel.oneTaskCellViewModel(indexPath: indexPath) else { fatalError() }
         cell.viewModel = cellViewModel // Here we join the cellviewmodel with the cell. In the rest of modules this joint
                                        // takes places in the module coordinator. For cell modules we do it in cellforrowat method
         return cell
@@ -155,16 +154,10 @@ extension TasksListViewController: UITableViewDelegate, UITableViewDataSource {
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
-//    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-//        return true
-//    }
-    
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         // This method allows me to drag in the task cell to the left and discover the red button "delete"
         viewModel.deleteTask(at: indexPath)
     }
-    
-    
 }
 // MARK: - ViewModel communication
 extension TasksListViewController: TasksListViewDelegate {

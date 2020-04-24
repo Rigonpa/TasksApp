@@ -39,13 +39,10 @@ class Coordinator {
     func removeAllChildCoordinators() {
         childCoordinators.removeAll()
     }
-    
 }
 
 extension Coordinator: Equatable {
     static func == (lhs: Coordinator, rhs: Coordinator) -> Bool {
         return lhs === rhs
     }
-    
-    
 }

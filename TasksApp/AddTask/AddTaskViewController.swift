@@ -84,6 +84,8 @@ class AddTaskViewController: UIViewController {
             saveButton.widthAnchor.constraint(equalToConstant: 80),
             saveButton.heightAnchor.constraint(equalToConstant: 30)
         ])
+        
+        // configureViewEffects()
     }
     
     // MARK: - Private methods
@@ -92,6 +94,14 @@ class AddTaskViewController: UIViewController {
         viewModel.onSavingNewTask(title: textField.text)
     }
     
+    // Add a blur effect to the background view. With this function if the view is small, the background is blurred.
+    private func configureViewEffects() {
+        let blurEffect = UIBlurEffect(style: .light)
+        let blurredEffectView = UIVisualEffectView(effect: blurEffect)
+        blurredEffectView.frame = view.bounds
+        view.addSubview(blurredEffectView)
+        view.sendSubviewToBack(blurredEffectView)
+    }
 }
 
 // MARK: - ViewModel communication

@@ -24,25 +24,21 @@ class TasksListCoordinator: Coordinator {
         
         tasksListViewModel.coordinatorDelegate = self
         tasksListViewModel.viewDelegate = tasksListViewController
-        self.tasksListViewModel = tasksListViewModel // I had forgotten this step
+        self.tasksListViewModel = tasksListViewModel // I had forgotten to inicialize this property
         
         presenter.pushViewController(tasksListViewController, animated: true)
-
     }
     
     override func finish() { }
-    
 }
 
 // MARK: - ViewModel communication
 extension TasksListCoordinator: TasksListCoordinatorDelegate {
-
     func onAddButtonSelected() {
         // Starting addTask module
         let addTaskCoordinator = AddTaskCoordinator(presenter: presenter)
         addChildCoordinator(addTaskCoordinator)
         addTaskCoordinator.start()
-        
         
         // Closure from addTaskCoordinator to close that module
         addTaskCoordinator.onTaskSuccessfullyAdded = {[weak self] in
@@ -51,7 +47,6 @@ extension TasksListCoordinator: TasksListCoordinatorDelegate {
             self.tasksListViewModel?.fetchTasksFromLocalDatabase()
             addTaskCoordinator.finish()
             self.removeChildCoordinator(addTaskCoordinator)
-            
         }
     }
 }

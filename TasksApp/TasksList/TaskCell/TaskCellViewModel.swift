@@ -13,7 +13,7 @@ protocol TaskCellViewDelegate {
 }
 
 protocol TaskCellViewModelDelegate {
-    func onStateChange(to: Bool, title: String)
+    func onTaskStateChange(to: Bool, title: String)
 }
 
 class TaskCellViewModel {
@@ -31,9 +31,6 @@ class TaskCellViewModel {
     }
     
     func onStateChange(to state: Bool, title: String) {
-        self.delegate?.onStateChange(to: state, title: title)
+        self.delegate?.onTaskStateChange(to: state, title: title)
     }
-    
-    
-    
 }

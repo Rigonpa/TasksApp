@@ -61,31 +61,28 @@ class TasksListViewModel {
         viewDelegate?.onTasksFetched()
     }
     
-    // MARK: - TableView methods
-    func numberOfRows(segmentedControlPosition pos: Int) -> Int {
-        
+    func updatingCurrentTaskCellViewModels(section: Int) {
         currentTaskViewModels = []
-        switch pos {
-            
+        switch section {
             // Pending position of the segmented control
             case 1:
                 currentTaskViewModels = taskViewModels.filter{ $0.task.state == TaskState.pending.rawValue}
-                return currentTaskViewModels.count
-            
             // Done position of the segmented control
             case 2:
                 currentTaskViewModels = taskViewModels.filter{ $0.task.state == TaskState.done.rawValue}
-                return currentTaskViewModels.count
-            
             //All position of the segmented control
             default:
                 currentTaskViewModels = taskViewModels
-                return currentTaskViewModels.count
         }
     }
     
-    func selectOneOfTheTaskViewModelsArray(indexPath: IndexPath, segmentedControlPosition pos: Int) -> TaskCellViewModel? {
-        
+    // MARK: - TableView methods
+    func numberOfRows(section: Int) -> Int {
+        updatingCurrentTaskCellViewModels(section: section)
+        return currentTaskViewModels.count
+    }
+    
+    func oneTaskCellViewModel(indexPath: IndexPath) -> TaskCellViewModel? {
         guard indexPath.row < taskViewModels.count else { return nil}
         return currentTaskViewModels[indexPath.row]
     }
@@ -93,17 +90,15 @@ class TasksListViewModel {
     func heightForRow() -> Int {
         return 50
     }
-    
 }
 
 // MARK: - task cell view model communication
 extension TasksListViewModel: TaskCellViewModelDelegate {
-    func onStateChange(to state: Bool, title: String) {
+    func onTaskStateChange(to stateIsOn: Bool, title: String) {
         guard let allTasks = dataProvider.loadAllTasks(), allTasks.isEmpty == false else { return }
-        
         let updatedTask = allTasks.filter{ $0.title == title }
         updatedTask.forEach {
-            if state {
+            if stateIsOn {
                 $0.state = TaskState.done.rawValue
                 print("Updating task state to done")
             } else {

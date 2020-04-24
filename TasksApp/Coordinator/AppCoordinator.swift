@@ -24,7 +24,6 @@ class AppCoordinator: Coordinator {
         
         window.rootViewController = tasksListNavigationController
         window.makeKeyAndVisible()
-        
     }
     
     override func finish() { }
